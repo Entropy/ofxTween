@@ -1,8 +1,8 @@
 #ifndef _PENNER_BOUNCE
 #define _PENNER_BOUNCE
 
-#include "ofxEasing.h"
-class ofxEasingBounce: public ofxEasing {
+#include "ofxBaseEasing.h"
+class ofxEasingBounce: public ofxBaseEasing {
 
 	public:
 

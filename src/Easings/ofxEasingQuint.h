@@ -1,7 +1,7 @@
 #ifndef _PENNER_QUINT
 #define _PENNER_QUINT
-#include "ofxEasing.h"
-class ofxEasingQuint: public ofxEasing {
+#include "ofxBaseEasing.h"
+class ofxEasingQuint: public ofxBaseEasing {
 
 	public:
 

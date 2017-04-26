@@ -1,7 +1,7 @@
 #ifndef _PENNER_CUBIC
 #define _PENNER_CUBIC
-#include "ofxEasing.h"
-class ofxEasingCubic: public ofxEasing {
+#include "ofxBaseEasing.h"
+class ofxEasingCubic: public ofxBaseEasing {
 
 	public:
 

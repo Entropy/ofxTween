@@ -3,7 +3,6 @@
 ofxTween::ofxTween(){
 	duration = 0;
 	completed = true;
-	easingFunction = NULL;
 	running = false;
 
 	easing = NULL;
@@ -14,7 +13,6 @@ ofxTween::ofxTween(){
 ofxTween::ofxTween(const ofxTween &other)
 : id(other.id),
 end_E(other.end_E),
-timestamp(other.timestamp),
 from(other.from),
 to(other.to),
 change(other.change),
@@ -27,12 +25,6 @@ running(other.running),
 completed(other.completed),
 type(other.type),
 frameBased(other.frameBased) {
-    if (other.easingFunction) {
-        easingFunction = new ofxTweenDelegate(*other.easingFunction);
-    }
-    else {
-        easingFunction = NULL;
-    }
     if (other.easing) {
         easing = other.easing;
     }
@@ -44,8 +36,7 @@ frameBased(other.frameBased) {
 ofxTween ofxTween::operator=(const ofxTween &other)
 {
     id = other.id;
-    end_E = other.end_E;
-    timestamp = other.timestamp;
+	end_E = other.end_E;
     from = other.from;
     to = other.to;
     change = other.change;
@@ -57,13 +48,7 @@ ofxTween ofxTween::operator=(const ofxTween &other)
     running = other.running;
     completed = other.completed;
     type = other.type;
-    frameBased = other.frameBased;
-    if (other.easingFunction) {
-        easingFunction = new ofxTweenDelegate(*other.easingFunction);
-    }
-    else {
-        easingFunction = NULL;
-    }
+	frameBased = other.frameBased;
     if (other.easing) {
         easing = other.easing;
     }
@@ -73,19 +58,18 @@ ofxTween ofxTween::operator=(const ofxTween &other)
     return *this;
 }
 
-ofxTween::ofxTween(int id,  ofxEasing & easing, ofxEasingType type,  float from, float to, unsigned duration, unsigned delay) {
+ofxTween::ofxTween(int id,  ofxBaseEasing & easing, ofxEasingType type,  float from, float to, unsigned duration, unsigned delay) {
 	setParameters(id, easing, type, from,to,duration,delay);
 }
 
 ofxTween::~ofxTween() {
-	if(easingFunction) delete easingFunction;
 }
 
-void ofxTween::setParameters( ofxEasing & easing, ofxEasingType type, float from, float to, unsigned duration, unsigned delay){
+void ofxTween::setParameters( ofxBaseEasing & easing, ofxEasingType type, float from, float to, unsigned duration, unsigned delay){
 	setParameters(id, easing, type, from,to,duration,delay);
 }
 
-void ofxTween::setParameters(int _id,  ofxEasing & _easing, ofxEasingType _type,  float _from, float _to, unsigned _duration, unsigned _delay){
+void ofxTween::setParameters(int _id,  ofxBaseEasing & _easing, ofxEasingType _type,  float _from, float _to, unsigned _duration, unsigned _delay){
 	from.clear();
 	to.clear();
 	change.clear();
@@ -94,19 +78,7 @@ void ofxTween::setParameters(int _id,  ofxEasing & _easing, ofxEasingType _type,
 	id 		= _id;
 	type 	= _type;
 	easing 	= &_easing;
-    
-	if(easingFunction) delete easingFunction;
-    switch(type){
-	case easeIn:
-		easingFunction = new ofxTweenDelegate(easing, &ofxEasing::easeIn);
-	break;
-	case easeOut:
-		easingFunction = new ofxTweenDelegate(easing, &ofxEasing::easeOut);
-	break;
-	case easeInOut:
-		easingFunction = new ofxTweenDelegate(easing, &ofxEasing::easeInOut);
-	break;
-	}
+
 
 	addValue(_from,_to);
 	if(frameBased){
@@ -132,8 +104,6 @@ void ofxTween::addValue(float _from, float _to){
 
 void ofxTween::start(){
 	if(!frameBased){
-		timestamp = Poco::Timestamp();
-		timestamp += delay;
 	}else{
 		elapsed=0;
 	}
@@ -178,7 +148,6 @@ float ofxTween::update() {
 				args.b=from[i];
 				args.c=change[i];
 
-				easingFunction->notify(this,args);
 				pTarget[i] = args.res;
 			}
 			if(pTarget[0]==to[0])
@@ -186,29 +155,6 @@ float ofxTween::update() {
 			else
 				running = true;
 		}else{
-			if (timestamp.isElapsed(duration)){
-				for(unsigned i=0; i<from.size(); i++){
-					pTarget[i] = to[i];
-				}
-				running = false;
-				completed = true;
-				ofNotifyEvent(end_E,id);
-			}
-
-			else if(timestamp.elapsed()>0){
-				ofxEasingArgs args;
-				float elapsedTime = float(timestamp.elapsed());
-				args.t= elapsedTime;
-				args.d= float(duration);
-				for(unsigned i=0; i<from.size(); i++){
-					args.b=from[i];
-					args.c=change[i];
-
-					easingFunction->notify(this,args);
-					pTarget[i] = args.res;
-				}
-				running = true;
-			}
 		}
 	}
 	return getTarget(0);
@@ -219,12 +165,12 @@ void ofxTween::setFrameBasedAnimation(bool frameBased){
 	this->frameBased = frameBased;
 }
 
-float ofxTween::map(float value, float inputMin, float inputMax, float outputMin, float outputMax, bool clamp, const ofxEasing & easing)
+float ofxTween::map(float value, float inputMin, float inputMax, float outputMin, float outputMax, bool clamp, const ofxBaseEasing & easing)
 {
 	return ofxTween::map(value, inputMin, inputMax, outputMin, outputMax, clamp, easing, ofxTween::easeInOut);
 }
 
-float ofxTween::map(float value, float inputMin, float inputMax, float outputMin, float outputMax, bool clamp, const ofxEasing & easing, ofxEasingType type)
+float ofxTween::map(float value, float inputMin, float inputMax, float outputMin, float outputMax, bool clamp, const ofxBaseEasing & easing, ofxEasingType type)
 {
 	if(clamp){
 		value = ofClamp(value, inputMin, inputMax);

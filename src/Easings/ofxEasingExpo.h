@@ -2,8 +2,8 @@
 #define _PENNER_EXPO
 
 #include <math.h>
-#include "ofxEasing.h"
-class ofxEasingExpo: public ofxEasing {
+#include "ofxBaseEasing.h"
+class ofxEasingExpo: public ofxBaseEasing {
 
 	public:
 

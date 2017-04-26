@@ -1,8 +1,8 @@
 #ifndef _PENNER_LINEAR
 #define _PENNER_LINEAR
 
-#include "ofxEasing.h"
-class ofxEasingLinear: public ofxEasing {
+#include "ofxBaseEasing.h"
+class ofxEasingLinear: public ofxBaseEasing {
 
 	public:
 

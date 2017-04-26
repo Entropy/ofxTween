@@ -2,8 +2,8 @@
 #define _PENNER_CIRC
 
 #include <math.h>
-#include "ofxEasing.h"
-class ofxEasingCirc: public ofxEasing {
+#include "ofxBaseEasing.h"
+class ofxEasingCirc: public ofxBaseEasing {
 
 	public:
 

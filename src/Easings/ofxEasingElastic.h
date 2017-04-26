@@ -2,12 +2,12 @@
 #define _PENNER_ELASTIC
 
 #include <math.h>
-#include "ofxEasing.h"
+#include "ofxBaseEasing.h"
 #ifndef PI
 #define PI  3.14159265
 #endif
 
-class ofxEasingElastic: public ofxEasing {
+class ofxEasingElastic: public ofxBaseEasing {
 
 	public:
 

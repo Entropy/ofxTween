@@ -1,8 +1,9 @@
 #ifndef _PENNER_BACK
 #define _PENNER_BACK
 
-#include "ofxEasing.h"
-class ofxEasingBack: public ofxEasing {
+#include "ofxBaseEasing.h"
+
+class ofxEasingBack: public ofxBaseEasing {
 
 	public:
 
